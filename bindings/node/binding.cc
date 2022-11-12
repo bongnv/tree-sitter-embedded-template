@@ -23,6 +23,12 @@ void Init(Local<Object> exports, Local<Object> module) {
   Nan::Set(module, Nan::New("exports").ToLocalChecked(), instance);
 }
 
-NODE_MODULE(tree_sitter_embedded_template_binding, Init)
+#if NODE_MAJOR_VERSION >= 12
+  NODE_MODULE_INIT(/* exports, module, context */) {
+    Init(exports, Nan::To<Object>(module).ToLocalChecked());
+  }
+#else
+  NODE_MODULE(tree_sitter_embedded_template_binding, Init)
+#endif
 
 }  // namespace
